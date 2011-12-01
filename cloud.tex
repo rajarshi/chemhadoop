@@ -116,7 +116,7 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Parallelizing Cheminformatics with Map/Reduce and Hadoop}
+\title{Cheminformatics and the Cloud -More than Just Remote Hosting?}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -147,7 +147,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \address{%
-    \iid(1)NIH Chemical Genomics Center, 9800 Medical Center Drive, Rockville, %
+    \iid(1)NIH Center for Translational Therapeuticsr, 9800 Medical Center Drive, Rockville, %
     MD 20852
 }%
 
@@ -171,41 +171,12 @@
 
 
 \begin{abstract}
-  \paragraph*{Background:} Many techniques and software frameworks
-  have been designed to support parallelization. The map/reduce
-  paradigm is one such technique that is based on the application of a
-  user defined function to a series of objects, the results of which
-  are then collected and processed. Recently, software frameworks have
-  been developed that allow one to employ this technique on large
-  compute clusters. In this paper we discuss how various
-  cheminformatics applications can be rewritten to make use of the
-  map/reduce paradigm. Specifically, we focus on the use of the Hadoop
-  framework to implement these applications. We also present
-  performance benchmarks comparing Hadoop applications to their serial
-  counterparts. Finally, we provide a brief description of how such
-  applications can benefit from elastic computing providers, viz.,
-  Amazon EC2.
-      
-        \paragraph*{Results:} Text for this section of the abstract \ldots
-
-        \paragraph*{Conclusions:} Our results indicate that many
-        cheminformatics applications can be easily converted to a
-        map/reduce style and using the Hadoop framework can be
-        seamlessly deployed on to large Hadoop clusters, such as as
-        those available from Amazon. Performance benchmarks indicate
-        that such deployments need relatively large datasets to show
-        significant improvements. At the same time, the use of
-        commercial elastic computing providers such as Amazon, does
-        have downsides primarily due to the bandwidth involved in
-        loading datasets and retreiving results.
+  \paragraph*{Background:} 
+ \paragraph*{Results:} Text for this section of the abstract \ldots
+ \paragraph*{Conclusions:} 
 \end{abstract}
 
-
-
 \ifthenelse{\boolean{publ}}{\begin{multicols}{2}}{}
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -232,89 +203,37 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+General idea is to survey cheminformatics applications in the cloud
+as well as more generally, what classes of applications benefit from
+cloud technologies. One focus of the paper is to try and list ``big
+data'' problems in cheminformatics - if there are any.
+  \begin{itemize}
+  \item Increase of big data in the sciences
+    \begin{itemize}
+    \item Highlight bioinformatics big data problems
+    \item Discuss the issue of big data in chemistry
+      \begin{itemize}
+      \item Large public databases (Pubchem, GDB, etc)
+      \item Applications using large chemical collections (virtual
+        screening, \ldots)
+      \item Highlight how many (most?) large scale cheminformatics applications can
+        be solved by chunking
+      \end{itemize}
+    \item Discuss cloud technologies
+      \begin{itemize}
+      \item Large scale remote hosting
+      \item Commercial benefits (?) - probably depends
+      \item Hadoop and cheminformatics - discuss some examples
+      \item Data grids (allowing all data to remain in memory)
+      \end{itemize}
+   \end{itemize}
+ \end{itemize}
 
 %%%%%%%%%%%%%%%%
 %% Background %%
 %%
 \section*{Background}
 
-The map / reduce paradigm has been discussed in various forms since
-XXX [REFS], and describes an approach to parallel
-processing. Fundamentally, the paradigm consists of two steps. In the
-\textit{map} phase, a task is broken down into small chunks, each of
-which may be processed on different nodes of a cluster (or different
-cores on multi-core CPU). The output of each of the tasks is then
-aggregated in the \textit{reduce} phase. A more formal definition is
-given below.
-
-Given that map / reduce can be considered a design pattern [REF],
-there are many implementations of this in a variety of languages. For
-example, the map phase is easily carried out in languages such as
-Python (the \texttt{map} command), R (the \texttt{apply} or
-\texttt{lapply} commands) and Lisp (the \texttt{map} command). Thus
-while many languages support the map/reduce paradigm, the real value
-is the ability to use this approach to process massive datasets over
-large compute clusters. This scenario ws described in by Ghemawat and
-has spurred the development of a number of map/reduce
-\textit{frameworks}, which allow one to take advantage of large
-clusters. Probably the most well known such framework is Hadoop, first
-developed by Yahoo Inc. and subsequently open sourced. The framework
-allows one to process arbitrarily large datasets, over very large
-clusters. For example, Yahoo has reported the analysis of
-multi-terabyte web log files on clusters with 4000 nodes [REF].
-
-Many applications of the map/reduce approach have focused on
-\textit{trivially parallelizable} problems. In these cases, the
-computational processing step is relatively simple, but must be
-applied a large number of objects (which may be individual files or
-even individual lines in a single, very large file). Examples of this
-include log file analysis [REF], image process [REF] and document
-analysis [REF]. On the other hand there are a number of cases, where
-traditional serial algorithms can be converted in to a map/reduce
-framework In such cases, the dataset itself may not be particularly
-large, but the computational processing can be sped up by being
-distributed over a cluster. Examples of such appplications include
-linguistic analysis [REF], outlier detection [REF]. In addition, there
-have been reports of a variety of machine learning algorithms being
-converted to the map/reduce framework including Bayesian networks
-[REF], discriminant classification [REF] and XXX.
-
-While there has been active development of map/reduce fragments in a
-variety of fields, such developments for life science applications
-have not been as widespread. Most of the current scientific
-applications have focused on bioinformatics methodologies. A recent
-example is the case of Bowtie [REF], which is an implementation of
-genome assembly algorithms in the map/reduce framework.
-
-In contrast, there have been reports of cheminformatics applications
-making use of the map/reduce pardigm, either at the dataset or
-algorithmic levels. One of the major reasons for this is that most
-datasets in cheminformatics are not very large (at least compared to
-those generated in other fields such as genome sequencing). On an
-algorithmic level, certain cheminformatics methods (such as thosed
-based on machine learning) can make use of map/reduce
-frameworks. Whether it is useful to do so brings us back to the issue
-of dataset size.
-
-The rest of this paper describes the use of the Hadoop map/reduce
-framework for cheminformatics problems. Specifically we focus on the
-use of Hadoop version 0.18. While more recent versions are available,
-this is the version that is support by Amazon, thus allowing us to
-test our applications on the Amazon cloud, without modifications to
-the source code. Section XXX describes how one designs a Hadoop
-program to perform such computations. We specifically highlight
-input/output issues that arise when one moves from line oriented
-formats (i.e., SMILES files) to multi-line record formats (such as SD
-files). We then describes examples of map/reduce applications. We
-consider data-parallel problems as well as algorithm-parallel
-applciations. Section XXX provides some benchmarks comparing Hadoop
-programs to their serial counterparts. We also provide some initial
-benchmarks for programs running on Amazon Elastic Compute
-servers. Finally, Section XXX discusses some of the drawbacks of the
-map/reduce paradigm and use of Amazon services as well as further
-applications in cheminformatics.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -325,136 +244,19 @@ applications in cheminformatics.
 In the following subsections we discuss a number of cheminformatics
 applications using the Hadoop framework.
 
-\subsection*{Atom counting}
-\label{sec:atom-counting}
-
-We first consider the cheminformatics equivalent of the canonical word counting Hadoop application. In the original example, the goal is to calculate the frequency of words in a very large text file. In the cheminformatics version, we are interested in counting the frequency of individual elements in a collection of SMILES strings. The program is provided in Listing ZZZ. The key features are the mapper and reducer classes. In the former, the *map* method receives a single line from the SMILES file, along with an arbitrary key. The line is parsed as SMILES string giving us an object representing the molecules.  We then loop over the atoms in the molecule and for each atom we write out the symbol along with a constant integer (viz., 1). This represents the output of the mapper - a series of key, value pairs, in which the key is the atomic symbol and its value simply indicates that the symbol occurred. One can see that by summing up the values for a given key, one would obtain the number of times that the element occurs in the collection of SMILES strings. Note that the output of the mapper is written to a special object of class Context (as opposed to STDOUT). This allows the Hadoop framwork to aggregate the key,value output of the mappers (which are likely running on different nodes) which can then be provided to the reducer class.
-
-At one point, after sufficient results from the mappers have been obtained, the framework will instantiate the reducer class. In this example, the reducer class will receive a single key and the values associated with that key. For the atom counting case, a key could be the symbol "C" and the values would be the series {1,1,1,1,1}. In this application the reduce operation need only sum up the values and as with the mapper, writes out the key and it's reduced value to the Context object. Hadoop can then collect the output of the reducers (which will in general be running on multiple nodes) and generate the final output of the program.
-
-it is important to note that the output type of the mapper should match the input type of the reducer. In this example, the output of the mapper is a series of String,Integer pairs (the variable "one" is an instance of IntWritable). As a result, the reducer will expect that the values corresponding to a given key to be a series of Integers. Thus the second argument of the reduce method in IntSumReducer is Iterable<IntWritable>. This is also indicated in the signature of the mapper and reducer classes. 
-
-\subsection*{Benchmarks}
-\label{sec:benchmarks}
-
-To run the applications described here on ones local machine, one must set up a Hadoop File System (HFS). Into this filesystem, one loads the input data files and on completion of the run, one retrieves the output files. For Hadoop version 0.18 one can initialize the HFS as follows:
-
-foo
-bar
-
-With the filesystem initialized, one copies a data file from the local disk into the HFS by:
-
-foo
-bar
-
-At this point we can run the program. We compile the program into a single jar file, contaning all the dependencies. With this jar file (all programs described here can be obtained in JAR form from XXX) one then runs the program as
-
-foo
-bar
-
-Progress can usually be monitored via a web browser at XXX, allowing one to view the progress of the mappers and reducers. Obviously, on a single machine this is not particularly informative, but is useful for debugging purposes. One benefit of using the Hadoop provided configuration classes is that one can switch to serial execution from the command line. In this mode, the input file is still chunked, but each chunk is processed serially. This allows us to easily generate a number of benchmarks.
-
-\subsection*{Discussion}
-\label{sec:discussion}
-
-* Why not use a job scheduling system - these address the map phase,
-but would require extra work to perform the reduce phase.
-
-* The nature of the file *chunking* step suggests the use of very
-large input files. For applications based on SMILES input, it is rare
-to have multi-gigabyte input files (the whole of PubChem in SMILES
-format is XXX GB). In such cases, one can reduce the default chunk
-size, allowing the use of multiple mapper nodes. However, the amount
-of data in a given chunk becomes smaller and the overhead of the data
-distrbution step may overshadow the actual computation time. This
-issue becomes unimportant when dealing with large SD files.
-
-* map reduce is bad -
-\url{http://developers.slashdot.org/story/08/01/18/1813248/MapReduce-mdash-a-Major-Step-Backwards}
-
-
     
 
 %%%%%%%%%%%%%%%%%%%%%%
 \section*{Conclusions}
-While most cheminformatics applications do not yet deal with datasets
-as large those generated in other fields (such as genome sequencing),
-we show that the use of map/reduce allows such applications to scale
-to massive datasets when they arrive.
-
 
   
 %%%%%%%%%%%%%%%%%%
 \section*{Methods}
-Hadoop is a general purpose Java framework to support map/reduce style
-programs. While Hadoop programs can be run on a single machine with a
-single CPU, it's primary goal is to support such applications on large
-clusters. Thus, one can implement a Hadoop program and test it on ones
-local machine and then deploy it as is to a large cluster for
-production runs. It should also be noted that Hadoop programs do not
-necessarily have to be Java programs. It is posible to use programs
-written in arbitrary languages with Hadoop, as long they can read from
-standard input and write to standard output. In addition to the Hadoop
-framework, we require the use of a cheminformatics library to actually
-perform the domain tasks. We employ the Chemistry Development Kit
-(CDK), an Open Source Java cheminformatics toolkit [REFS].
-
-\subsection*{Data Flow in Hadoop Programs}
-\label{sec:data-flow-hadoop}
-To improve I/O efficiency, most Hadoop programs prefer to work with a
-few large files, rather a large number of small files. We assume that
-a single large file is to be processed. When a Hadoop program is
-started, it will *chunk* the file, sending each chunk to an individual
-node. For text files, a chunk is defined in terms of bytes - by
-default, each chunk is 64MB, though this can be changed at run
-time. In general, if the processing time for an individual record is
-small, larger chunks will be preferred.  Note that since chunks are
-defined by size, there is no guarantee that a chunk begins at the
-start of a record or ends at the end of record. In the case of data
-files where each line is a record, Hadoop will automatically provide
-complete lines to the mapper classes. For multi-line records, the user
-must provide an appropriate reader. Once a chunk has been created and
-sent to a node, it is then processed by the mapper class, which will
-receive one record at a time. Each node will process the records in
-its chunk and emit a new set of records in the form <key, value>. Once
-the first set of records are available from the mappers, the reducer
-classes will aggregate the key, value pairs such that all pairs with
-the same key are collected and then processed. In simple Hadoop
-programs, the output of the reducer classes is the output of the
-program. However, there is no restriction on the number of map and
-reduce phases, so that the output from the first reduce phase could be
-fed back into a second map phase. It is also possible to avoid the
-reduce phase in some cases (see Section XXX). While always having a
-reduce phase does not affect the final results, being able to avoid a
-reduce phase can lead to more efficient Hadoop programs.
-
-\subsection*{Mappers and Reducers}
-\label{sec:mappers-reducers-1}
-
-The key to developing a Hadoop program is to implement classes for the
-map and reduce phases.  A schematic outline of these two classes are
-shown in Listings XXX and YYY. When the mapper class is instantiated
-and called, it receives a single record as a String object.
 
 
-\subsection*{Input/Output}
-\label{sec:inputoutput}
-
-By default, Hadoop allows one to write map/reduce programs that deal
-with single-line oriented data files. That is each line represents a
-single record. In cheminformatics, SMILES files are an example of such
-records. Thus if the input is a SMILES file, one need not worry about
-file processing and can simply implement the map and reduce classes.
-
-However many applications require the use of multi-line records such
-as SD files, CML files and so on. To support such files, so that the
-mappers are able to access individual records, one must implement
-custom readers. We have provided a a class to support the reading of
-SD files in a Hadoop program.
-    
+   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Authors contributions}
-RG devised the applications, implemented the Hadoop programs and wrote the paper.
 
     
 
